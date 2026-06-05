@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ai_seller_assistant
 
 A new Flutter project.
@@ -15,3 +16,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# AI-Seller-Assistant
+AI-powered Flutter application that helps sellers create product listings and manage products efficiently.
+>>>>>>> ed0a2b992dae5350714584a2104d3ffb83d67af8
