@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "968634084074",
+    "project_id": "ai-seller-assistant-bfd43",
+    "storage_bucket": "ai-seller-assistant-bfd43.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968634084074:android:660575b3f181bc4a2b8593",
+        "android_client_info": {
+          "package_name": "com.example.ai_seller_assistant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAihPat9izsqnpPt1Rez5YLZHlFYXpyLwc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968634084074:android:be7d91d8f972a02c2b8593",
+        "android_client_info": {
+          "package_name": "com.kamesh.ai_seller_assistant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAihPat9izsqnpPt1Rez5YLZHlFYXpyLwc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
