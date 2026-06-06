@@ -1,15 +1,18 @@
 import 'package:ai_seller_assistant/screens/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  String apiKey = dotenv.env['API_KEY'] ?? '';
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  Gemini.init(apiKey: 'AQ.Ab8RN6IEgVw0qQmCfBmuJkrY1T1O86MFWP4v-k8reXU_ogJddw');
+  Gemini.init(apiKey: apiKey);
 
   runApp(const MyApp());
 }
