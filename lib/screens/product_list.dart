@@ -55,13 +55,13 @@ class _ProductListState extends State<ProductList> {
                       ),
 
                       const SizedBox(height: 10),
-
+                      if (product.data().toString().contains('aiTitle'))
+                        Text('AI Title: ${product['aiTitle']}'),
                       Text('Category : ${product['category']}'),
                       Text('Brand : ${product['brand']}'),
                       Text('Cost Price : ₹${product['costPrice']}'),
-                      Text('Selling Price : ₹${product['sellingPrice']}'),
-                      Text('Description : ${product['description']}'),
-
+                      if (product.data().toString().contains('sellingPrice'))
+                        Text('Selling Price : ₹${product['sellingPrice']}'),
                       const SizedBox(height: 20),
 
                       Row(
@@ -97,15 +97,14 @@ class _ProductListState extends State<ProductList> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => AiListingScreen(
-        product: product,
-      ),
-    ),
-  );
-},
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    AiListingScreen(product: product),
+                              ),
+                            );
+                          },
                           // onPressed: () async {
                           //   final result = await GeminiService()
                           //       .generateListing(

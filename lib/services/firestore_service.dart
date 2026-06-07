@@ -9,16 +9,12 @@ class FirestoreService {
     required String category,
     required String brand,
     required String costPrice,
-    required String sellingPrice,
-    required String description,
   }) async {
     await _firestore.collection('products').add({
       'productName': productName,
       'category': category,
       'brand': brand,
       'costPrice': costPrice,
-      'sellingPrice': sellingPrice,
-      'description': description,
       'createdAt': Timestamp.now(),
     });
   }

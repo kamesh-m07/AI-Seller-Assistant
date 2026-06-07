@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ai_seller_assistant/services/ai_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,11 @@ class AiListingScreen extends StatefulWidget {
 
 class _AiListingScreenState extends State<AiListingScreen> {
   bool isLoading = true;
-  String aiContent = '';
+
+  String aiTitle = '';
+  String aiDescription = '';
+  String aiKeywords = '';
+  String aiSuggestedPrice = '';
 
   @override
   void initState() {
@@ -27,74 +33,93 @@ class _AiListingScreenState extends State<AiListingScreen> {
         productName: widget.product['productName'],
         category: widget.product['category'],
         brand: widget.product['brand'],
-        sellingPrice: widget.product['sellingPrice'],
-        description: widget.product['description'],
+        costPrice: widget.product['costPrice'],
       );
 
+      print(result);
+
+      final data = jsonDecode(result);
+
       setState(() {
-        aiContent = result;
+        aiTitle = data['aiTitle'] ?? '';
+        aiDescription = data['aiDescription'] ?? '';
+        aiKeywords = data['aiKeywords'] ?? '';
+        aiSuggestedPrice = data['aiSuggestedPrice'].toString();
+
         isLoading = false;
       });
     } catch (e) {
+      print("ERROR : $e");
+
       setState(() {
-        aiContent = 'Error: $e';
         isLoading = false;
       });
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 
   Future<void> saveListing() async {
-    await FirebaseFirestore.instance.collection('ai_listings').add({
-      'productId': widget.product.id,
-      'productName': widget.product['productName'],
-      'aiContent': aiContent,
-      'createdAt': Timestamp.now(),
-    });
+    await FirebaseFirestore.instance
+        .collection('products')
+        .doc(widget.product.id)
+        .update({
+          'aiTitle': aiTitle,
+          'aiDescription': aiDescription,
+          'aiKeywords': aiKeywords,
+          'aiSuggestedPrice': aiSuggestedPrice,
+          'aiGeneratedAt': Timestamp.now(),
+        });
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('AI Listing Saved')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('AI Listing Saved Successfully')),
+    );
+  }
+
+  Widget buildField(String title, String value) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 15),
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(value),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('AI Listing'), centerTitle: true),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
                 children: [
-                  Text(
-                    widget.product['productName'],
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  buildField('🤖 Product Title', aiTitle),
+
+                  buildField('🤖 Product Description', aiDescription),
+
+                  buildField('🤖 SEO Keywords', aiKeywords),
+
+                  buildField(
+                    '🤖 Suggested Selling Price',
+                    '₹$aiSuggestedPrice',
                   ),
 
                   const SizedBox(height: 20),
-
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          aiContent,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 15),
 
                   SizedBox(
                     width: double.infinity,
@@ -105,7 +130,7 @@ class _AiListingScreenState extends State<AiListingScreen> {
                   ),
                 ],
               ),
-      ),
+            ),
     );
   }
 }

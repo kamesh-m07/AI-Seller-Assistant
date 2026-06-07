@@ -13,8 +13,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final categoryController = TextEditingController();
   final brandController = TextEditingController();
   final costPriceController = TextEditingController();
-  final sellingPriceController = TextEditingController();
-  final descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -61,26 +59,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
             ),
             const SizedBox(height: 15),
 
-            TextField(
-              controller: sellingPriceController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: "Selling Price",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 15),
-
-            TextField(
-              controller: descriptionController,
-              maxLines: 4,
-              decoration: const InputDecoration(
-                labelText: "Product Description",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 15),
-
             OutlinedButton.icon(
               onPressed: () {
                 // Pick Image
@@ -100,17 +78,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     category: categoryController.text.trim(),
                     costPrice: costPriceController.text.trim(),
                     brand: brandController.text.trim(),
-                    sellingPrice: sellingPriceController.text.trim(),
-                    description: descriptionController.text.trim(),
                   );
 
-
-  productNameController.clear();
-  categoryController.clear();
-  brandController.clear();
-  costPriceController.clear();
-  sellingPriceController.clear();
-  descriptionController.clear();
+                  productNameController.clear();
+                  categoryController.clear();
+                  brandController.clear();
+                  costPriceController.clear();
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Product add Successfully')),

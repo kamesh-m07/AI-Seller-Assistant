@@ -5,26 +5,33 @@ class GeminiService {
     required String productName,
     required String category,
     required String brand,
-    required String sellingPrice,
-    required String description,
+    required String costPrice,
   }) async {
-    final response = await Gemini.instance.text(
-      '''
-Create an attractive e-commerce product listing.
+    final response = await Gemini.instance.text('''
+Generate an e-commerce listing.
 
 Product Name: $productName
 Category: $category
 Brand: $brand
-Selling Price: ₹$sellingPrice
-Description: $description
+Cost Price: ₹$costPrice
 
-Generate:
-1. Product Title
-2. Product Description
-3. Key Features (5 points)
-''',
-    );
+Return ONLY valid JSON in this format:
 
-    return response?.output ?? 'No response generated';
+{
+  "aiTitle": "",
+  "aiDescription": "",
+  "aiKeywords": "",
+  "aiSuggestedPrice": 0
+}
+
+Do not add markdown.
+Do not add explanation.
+Return JSON only.
+''');
+
+    print(response?.output);
+    print('hi');
+
+    return response?.output ?? '{}';
   }
 }

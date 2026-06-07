@@ -8,7 +8,7 @@ import 'firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  String apiKey = dotenv.env['API_KEY'] ?? '';
+  String apiKey = dotenv.env['APIKEY'] ?? '';
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 

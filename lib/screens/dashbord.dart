@@ -1,5 +1,6 @@
 import 'package:ai_seller_assistant/screens/add_product.dart';
 import 'package:ai_seller_assistant/screens/product_list.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,11 +13,64 @@ class Dashbord extends StatefulWidget {
 
 class _DashbordState extends State<Dashbord> {
   int selectedIndex = 0;
+
+  int totalProducts = 0;
+  int totalAiListings = 0;
+  double totalSales = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    loadDashboardData();
+  }
+
+  Future<void> loadDashboardData() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .get();
+
+    totalProducts = snapshot.docs.length;
+
+    totalAiListings = snapshot.docs.where((doc) {
+      return doc.data().containsKey('aiTitle');
+    }).length;
+
+    totalSales = 0;
+
+    for (var doc in snapshot.docs) {
+      if (doc.data().containsKey('sellingPrice')) {
+        totalSales += double.tryParse(doc['sellingPrice'].toString()) ?? 0;
+      }
+    }
+
+    setState(() {});
+  }
+
+  Widget dashboardCard(String title, String value) {
+    return Card(
+      margin: const EdgeInsets.all(10),
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Text(title, style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 10),
+            Text(
+              value,
+              style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: const Text('Dashboard'),
         centerTitle: true,
         backgroundColor: Colors.amber,
       ),
@@ -34,33 +88,16 @@ class _DashbordState extends State<Dashbord> {
         ),
       ),
 
-      body: Column(
-        children: [
-          // Text(data),
-          Card(
-            margin: const EdgeInsets.all(10),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(children: [Text('Products'), Text('156')]),
-            ),
-          ),
-          const SizedBox(height: 25),
-          Card(
-            margin: const EdgeInsets.all(10),
-            child: Padding(
-              padding: EdgeInsetsGeometry.all(16),
-              child: Column(children: [Text('Ai Listing'), Text('34')]),
-            ),
-          ),
-          const SizedBox(height: 25),
-          Card(
-            margin: const EdgeInsets.all(10),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(children: [Text('Sales'), Text('₹25,000')]),
-            ),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            dashboardCard('Products', totalProducts.toString()),
+
+            dashboardCard('AI Listings', totalAiListings.toString()),
+
+            dashboardCard('Sales', '₹${totalSales.toStringAsFixed(0)}'),
+          ],
+        ),
       ),
 
       bottomNavigationBar: BottomNavigationBar(
@@ -78,24 +115,26 @@ class _DashbordState extends State<Dashbord> {
           if (index == 0) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AddProductScreen()),
+              MaterialPageRoute(builder: (_) => const AddProductScreen()),
             );
           }
+
           if (index == 2) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProductList()),
+              MaterialPageRoute(builder: (_) => const ProductList()),
             );
           }
         },
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: "Add Product "),
+
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: "Add Product"),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list_outlined),
-            label: "Ai Listing",
+            icon: Icon(Icons.list_alt),
+            label: "AI Listing",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.production_quantity_limits),
+            icon: Icon(Icons.inventory),
             label: "My Product",
           ),
         ],
