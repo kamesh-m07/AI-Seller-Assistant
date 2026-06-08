@@ -1,4 +1,5 @@
 import 'package:ai_seller_assistant/screens/add_product.dart';
+import 'package:ai_seller_assistant/screens/login.dart';
 import 'package:ai_seller_assistant/screens/product_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +18,7 @@ class _DashbordState extends State<Dashbord> {
   int totalProducts = 0;
   int totalAiListings = 0;
   double totalSales = 0;
+  User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -77,12 +79,55 @@ class _DashbordState extends State<Dashbord> {
 
       endDrawer: Drawer(
         child: ListView(
+          padding: EdgeInsets.zero,
           children: [
-            UserAccountsDrawerHeader(
-              accountName: const Text('User'),
-              accountEmail: Text(
-                FirebaseAuth.instance.currentUser?.email ?? '',
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Colors.amber),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CircleAvatar(
+                    radius: 30,
+                    child: Icon(Icons.person, size: 30),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'AI Seller Assistant',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    user?.email ?? 'No Email',
+                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                ],
               ),
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.dashboard),
+              title: const Text('Dashboard'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                  (route) => false,
+                );
+              },
             ),
           ],
         ),

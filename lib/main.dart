@@ -1,4 +1,6 @@
+import 'package:ai_seller_assistant/screens/dashbord.dart';
 import 'package:ai_seller_assistant/screens/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -25,7 +27,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'AI Seller Assistant',
-      home: LoginScreen(),
+      home: FirebaseAuth.instance.currentUser != null 
+       ? Dashbord()
+       : LoginScreen(),
     );
   }
 }
